@@ -41,6 +41,12 @@ html {
   background: hsl(0, 0%, 95%);
 }
 
-.key__display {
+.display {
   grid-column: 1/4;
+  padding: 8px 16px;
+  border-radius: 16px;
+  border: 2px solid black;
+  box-shadow: 2px 2px 0 0 black;
+  text-align: right;
+  background: hsl(0, 0%, 95%);
 }
