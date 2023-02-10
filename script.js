@@ -1,38 +1,108 @@
-const calculator = document.querySelector(".calculator");
 const display = document.querySelector(".display");
-let currentNumber = 0;
-let displayedNumber = 0;
+const buttons = document.querySelectorAll(".key");
+const numberButtons = document.querySelectorAll(".key.number");
+const operatorButtons = document.querySelectorAll(".key.operator");
+const clearButton = document.querySelector(".clear");
+const equalsButton = document.querySelector(".equal");
 
-function add(summand1, summand2) {
-  const sum = summand1 + summand2;
-  return sum;
+let displayValue = "";
+let firstOperand = "";
+let operator = "";
+let secondOperand = "";
+let resultShown = false;
+
+function add(a, b) {
+  return a + b;
 }
 
-const subtract = function (minuend, subtrahend) {
-  const difference = minuend - subtrahend;
-  return difference;
-};
+function subtract(a, b) {
+  return a - b;
+}
 
-const multiply = function (factor1, factor2) {
-  const product = factor1 * factor2;
-  return product;
-};
+function multiply(a, b) {
+  return a * b;
+}
 
-const divide = function (dividend, divisor) {
-  const quotient = dividend / divisor;
-  return quotient;
-};
+function divide(a, b) {
+  if (b === 0) return "Error: Cannot divide by zero.";
+  return a / b;
+}
 
-const operate = function (operator, number1, number2) {
-  return operator(number1, number2);
-};
+function operate(calculation, a, b) {
+  switch (calculation) {
+    case "plus":
+      return add(a, b);
+    case "minus":
+      return subtract(a, b);
+    case "multiply":
+      return multiply(a, b);
+    case "divide":
+      return divide(a, b);
+    default:
+      return "Error: Invalid operator.";
+  }
+}
 
-const displayValue = function (value) {
-  display.innerHTML = `${value}`;
-};
+numberButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const value = button.dataset.key;
 
-calculator.addEventListener("click", (event) => {
-  const keyValue = event.target.dataset.key;
+    if (resultShown && operator === "") {
+      displayValue = "";
+      firstOperand = "";
+      operator = "";
+      secondOperand = "";
+      resultShown = false;
+    }
 
-  if (keyValue === undefined) return;
+    if (operator === "") {
+      firstOperand += value;
+    } else {
+      secondOperand += value;
+    }
+    displayValue += value;
+    display.textContent = displayValue;
+  });
+});
+
+operatorButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    operator = button.dataset.key;
+    console.log(operator);
+    displayValue = "";
+    display.textContent = displayValue;
+  });
+});
+
+clearButton.addEventListener("click", () => {
+  displayValue = "";
+  firstOperand = "";
+  operator = "";
+  secondOperand = "";
+  resultShown = false;
+  display.textContent = "0";
+});
+
+equalsButton.addEventListener("click", () => {
+  if (!secondOperand) return;
+
+  let solution = operate(operator, +firstOperand, +secondOperand);
+  displayValue = solution.toString();
+  display.textContent = displayValue;
+  firstOperand = solution.toString();
+  operator = "";
+  secondOperand = "";
+  resultShown = true;
+});
+
+buttons.forEach((button) => {
+  button.addEventListener("mousedown", () => {
+    button.classList.add("clicked");
+  });
+});
+
+buttons.forEach((button) => {
+  button.addEventListener("mouseup", () => {
+    button.classList.remove("clicked");
+  });
 });
